@@ -1,0 +1,9 @@
+# ignore intellij files
+.idea
+
+# ignore generated code
+*.js
+*.js.map
+
+# ignore package manager files
+node_modules
