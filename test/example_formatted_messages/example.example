@@ -1,0 +1,51 @@
+import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
+import {IntlProvider, FormattedMessage} from 'react-intl';
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name       : 'Eric',
+            unreadCount: 1000,
+        };
+    }
+
+    render() {
+        const {name, unreadCount} = this.state;
+
+        return (
+            <p>
+                <FormattedMessage
+                    id="welcome"
+                    defaultMessage={`Hello {name}, you have {unreadCount, number} {unreadCount, plural,
+                      one {message}
+                      other {messages}
+                    }`}
+                    values={{name: <b>{name}</b>, unreadCount}}
+                />
+                <FormattedMessage
+                    example="value"
+                    test="thingie"
+                    foo="bar"
+                    id="interesting-id"
+                    test="test"
+                    />
+                    <NotAFormattedMessage id="not-an-id" />
+                <FormattedMessage
+                    id="deeply.nested.formatted.message.goes.here"
+                    defaultValue="hello, world!" />
+                <FormattedMessage
+                    id="this.should.break.some.things"
+                    defaultMessage=`Example: "foo bar"` />
+            </p>
+        );
+    }
+}
+
+ReactDOM.render(
+    <IntlProvider locale="en">
+        <App />
+    </IntlProvider>,
+    document.getElementById('container')
+);

@@ -1,0 +1,24 @@
+{
+  "foo": {
+    "bar": {
+      "fi-fi": "fin",
+      "en-gb": "en"
+    }
+  },
+  "added": {
+    "some": {
+      "more": {
+        "items": {
+          "fi-fi": "fin items",
+          "and inner": {
+            "stuff": {
+              "here": {
+                "fi-fi": "täällä"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

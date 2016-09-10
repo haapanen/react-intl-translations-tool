@@ -30,7 +30,7 @@ export function dirExists(dir: string) {
  * @param extension
  * @returns {Promise<string[]>}
  */
-export function findAllFiles(dir: string, extension: string) {
+export function findAllFiles(dir: string, extension: string = "*") {
     return new Promise<string[]>((resolve, reject) => {
         try {
             const opts = {};
@@ -54,7 +54,7 @@ export function findAllFiles(dir: string, extension: string) {
  * @param path
  * @returns {Promise<T>}
  */
-export function readFile<T>(path: string): Promise<T | null> {
+export function readFile<T>(path: string): Promise<T> {
     return new Promise<T>((resolve, reject) => {
         try {
             fs.readFile(path, (err, data) => {
@@ -63,13 +63,29 @@ export function readFile<T>(path: string): Promise<T | null> {
                 }
 
                 try {
-                    return resolve(Object.assign({}, JSON.parse(data.toString()), {"__filename": path}));
+                    return resolve(Object.assign({}, JSON.parse(data.toString()), {"__filepath": path}));
                 } catch (err) {
-                    return resolve(null);
+                    return resolve({"__filepath": path});
                 }
             })
         } catch (err) {
             return reject(err);
         }
     });
+}
+
+export function readFileAsString(path: string): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+        try {
+            fs.readFile(path, (err, data) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                return resolve(data.toString());
+            })
+        } catch (err) {
+            return reject(err);
+        }
+    })
 }
