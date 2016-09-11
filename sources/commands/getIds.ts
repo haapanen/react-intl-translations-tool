@@ -1,15 +1,18 @@
-import {readFileAsString, dirExists, findAllFiles} from "../utilities";
+import {readFileAsString, dirExists, findAllFiles, saveObject} from "../utilities";
 import {error, success} from "../printer";
 interface GetIdsOptions {
     defaultLanguage: string;
     additionalLanguages: string;
+    outputFile?: string;
 }
 
-export async function getIds(dir: string, options: GetIdsOptions = {
+const defaultOptions = {
     defaultLanguage: "en-gb",
-    additionalLanguages: ""
-}) {
-    console.log(options.additionalLanguages);
+    additionalLanguages: "",
+    outputFile: undefined
+};
+
+export async function getIds(dir: string, options: GetIdsOptions = defaultOptions) {
     try {
         if (!(await dirExists(dir))) {
             return error(`could not find directory: ${dir}.`);
@@ -20,12 +23,20 @@ export async function getIds(dir: string, options: GetIdsOptions = {
             return error(`could not find any files in: ${dir}.`);
         }
 
-        const result = await createTranslationsTree(files, {defaultLanguage: options.defaultLanguage,
+        const result = await createTranslationsTree(files, {
+            defaultLanguage: options.defaultLanguage,
             additionalLanguages: options.additionalLanguages
                 ? options.additionalLanguages.split(",").map(x => x.trim())
-                : []});
+                : [],
+            outputFile: options.outputFile
+        });
 
-        success(JSON.stringify(result, null, 4));
+        if (options.outputFile !== undefined) {
+            await saveObject(options.outputFile, result);
+            success("Successfully saved parsed IDs to: " + options.outputFile);
+        } else {
+            console.log(JSON.stringify(result, null, 4));
+        }
     } catch (err) {
         return error("unknown error: " + err);
     }
@@ -37,16 +48,19 @@ interface TranslationTree {
     [index:string]:string;
 }
 
+interface CreateTranslationsTreeOptions {
+    defaultLanguage: string;
+    additionalLanguages: string[];
+    outputFile?: string;
+}
+
 /**
  * Reads input files, checks for any ids in them and builds a translations
  * tree based on the ids
  * @param files
  * @returns {Promise<TranslationTree>}
  */
-function createTranslationsTree(files: string[], options: {
-    defaultLanguage: string;
-    additionalLanguages: string[];
-}): Promise<TranslationTree> {
+function createTranslationsTree(files: string[], options: CreateTranslationsTreeOptions): Promise<TranslationTree> {
     return new Promise<TranslationTree>(async (resolve, reject) => {
         try {
             let translationTree: Object = {};

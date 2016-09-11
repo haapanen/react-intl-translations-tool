@@ -9,14 +9,15 @@ var packageJson:{
 
 export function entry(argv:string[]) {
     program
-        .command("compile <dir>")
+        .command("compile <dir> <outputDir>")
         .action(compile);
 
     program
         .command("getids <dir>")
         .description("Get the IDs from the files in the specified dir, create a translations tree out of them and add default messages into the tree.")
         .option("-l, --defaultLanguage <defaultLanguage>", "Specify the language the default messages will be mapped to.")
-        .option("-a, --additionalLanguages <items>", "Specify a list of languages that will be added to each translation.")
+        .option("-a, --additionalLanguages <languages>", "Specify a list of languages that will be added to each translation.")
+        .option("-o, --outputFile <file>", "Specify the output file (stdout by default).")
         .action(getIds);
 
     program

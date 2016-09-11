@@ -89,3 +89,17 @@ export function readFileAsString(path: string): Promise<string> {
         }
     })
 }
+
+export function saveObject(outputFile: string, data: any) {
+    return new Promise((resolve, reject) => {
+        try {
+            fs.writeFile(outputFile, JSON.stringify(data, null, 2), (err) => {
+                if (err) return reject(err);
+
+                return resolve();
+            });
+        } catch (err) {
+            return reject(err);
+        }
+    });
+}

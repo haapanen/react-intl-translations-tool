@@ -7,3 +7,7 @@
 
 # ignore package manager files
 node_modules
+
+test/output
+test/compile
+bin/
