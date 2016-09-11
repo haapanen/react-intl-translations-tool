@@ -9,7 +9,7 @@ var packageJson:{
 
 export function entry(argv:string[]) {
     program
-        .command("compile <dir> <outputDir>")
+        .command("compile <directory> <outputDirectory>")
         .action(compile);
 
     program
