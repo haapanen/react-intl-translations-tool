@@ -54,8 +54,8 @@ export function findAllFiles(dir: string, extension: string = "*") {
  * @param path
  * @returns {Promise<T>}
  */
-export function readFile<T>(path: string): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
+export function readFile<T>(path: string): Promise<T | null> {
+    return new Promise<T | null>((resolve, reject) => {
         try {
             fs.readFile(path, (err, data) => {
                 if (err) {
@@ -65,7 +65,7 @@ export function readFile<T>(path: string): Promise<T> {
                 try {
                     return resolve(Object.assign({}, JSON.parse(data.toString()), {"__filepath": path}));
                 } catch (err) {
-                    return resolve({"__filepath": path});
+                    return resolve(null);
                 }
             })
         } catch (err) {

@@ -2,13 +2,12 @@ import * as path from "path";
 import {dirExists, findAllFiles, readFile, saveObject} from "../utilities";
 import {error, success, warning} from "../printer";
 interface TranslationTree {
+    [index:string]:Object | string;
     __filepath:string;
-    [index:string]:Object;
-    [index:string]:string;
 }
 
 interface CompiledTranslations {
-    [index:string]:string;
+    [index:string]: {[index: string]: string;};
 }
 
 
@@ -28,17 +27,16 @@ export async function compile(dir:string, outputDir: string) {
             return error(`could not find any .json files in: ${dir}.`);
         }
 
-        const result = await compileTranslations(path.resolve(dir), files);
+        const result: any = await compileTranslations(path.resolve(dir), files);
 
-        for (var lang in result) {
+        for (let lang in result) {
             if (!result.hasOwnProperty(lang)) {
                 continue;
             }
 
             await saveObject(path.join(outputDir, `${lang}.json`), result[lang]);
         }
-        saveObject(path.join(outputDir, result))
-        console.log(result)
+        saveObject(path.join(outputDir, result), result);
         return success(`Successfully compiled ${files.length} files.`);
     } catch (err) {
         return error("unknown error: " + err);
@@ -55,7 +53,7 @@ export async function compileTranslations(rootDir: string, files:string[]) {
         try {
             let allTranslations:Promise<TranslationTree>[] = [];
             files.forEach(async(file) => {
-                allTranslations.push(readFile<TranslationTree>(file));
+                allTranslations.push(readFile<TranslationTree>(file) || Promise.resolve({ __filepath: file }));
             });
 
             let translations: CompiledTranslations[] = [];
@@ -92,10 +90,10 @@ export async function compileTranslations(rootDir: string, files:string[]) {
                         success(`generated translations for ${application}: ${initialPath}`);
 
                     });
-                    let singleDict = {};
+                    let singleDict: any = {};
 
                     translations.forEach(file => {
-                        for (var lang in file) {
+                        for (var lang in file as any) {
                             if (!file.hasOwnProperty(lang)) {
                                 continue;
                             }
@@ -106,7 +104,7 @@ export async function compileTranslations(rootDir: string, files:string[]) {
 
                     return resolve(singleDict);
                 }).catch((err) => {
-                return resolve(err);
+                return resolve(err.toString());
             });
         } catch (err) {
             return reject(err);

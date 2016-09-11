@@ -4,6 +4,12 @@ This tool converts a structured tree of translations into a flattened list of tr
 
 I wrote this tool as I was using TypeScript with React Intl and had some issues trying to get the default extraction system to work. 
 
+# Usage
+
+Install NPM packages
+```
+npm install
+```
 
 
 

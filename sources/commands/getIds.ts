@@ -43,9 +43,8 @@ export async function getIds(dir: string, options: GetIdsOptions = defaultOption
 }
 
 interface TranslationTree {
-    __filepath:string;
-    [index:string]:Object;
-    [index:string]:string;
+    __filepath?: string;
+    [index:string]:Object | string | undefined;
 }
 
 interface CreateTranslationsTreeOptions {
@@ -63,13 +62,13 @@ interface CreateTranslationsTreeOptions {
 function createTranslationsTree(files: string[], options: CreateTranslationsTreeOptions): Promise<TranslationTree> {
     return new Promise<TranslationTree>(async (resolve, reject) => {
         try {
-            let translationTree: Object = {};
+            let translationTree: TranslationTree = {};
             const formattedMessages = await findFormattedMessages(await getContents(files));
 
             formattedMessages.forEach(message => {
                 const nodes = message.id.split(".");
 
-                buildTranslationTree(translationTree, nodes, message.defaultMessage, options);
+                buildTranslationTree(translationTree, nodes, message.defaultMessage || "", options as any);
             });
 
             return resolve(translationTree);
@@ -81,7 +80,7 @@ function createTranslationsTree(files: string[], options: CreateTranslationsTree
 
 interface FormattedMessage {
     id: string;
-    defaultMessage: string;
+    defaultMessage?: string;
 }
 
 /**
@@ -120,7 +119,7 @@ export function findFormattedMessages(input: string): FormattedMessage[] {
     return formattedMessages;
 }
 
-function buildTranslationTree(translationTree: Object, nodes: string[], defaultMessage: string, { defaultLanguage = "en-gb", additionalLanguages = [] }) {
+function buildTranslationTree(translationTree: any, nodes: string[], defaultMessage: string, { defaultLanguage = "en-gb", additionalLanguages = [] }) {
     if (nodes.length === 0) {
         return;
     }
@@ -132,8 +131,8 @@ function buildTranslationTree(translationTree: Object, nodes: string[], defaultM
             defaultLanguage, additionalLanguages
         });
     } else {
-        translationTree[nodes[0]] = { [defaultLanguage]: defaultMessage || "" };
-        additionalLanguages.forEach(lang => {
+        translationTree[nodes[0]] = { [defaultLanguage]: defaultMessage };
+        additionalLanguages.forEach((lang: string) => {
             translationTree[nodes[0]][lang] = "";
         });
     }
