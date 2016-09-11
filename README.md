@@ -1,4 +1,4 @@
-# React Intl translations tool
+# React Intl translations tool (Prototype at the moment!)
 
 This tool converts a structured tree of translations into a flattened list of translations supported by React Intl.
 
