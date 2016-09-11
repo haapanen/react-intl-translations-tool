@@ -131,11 +131,12 @@ async function createFlattenedTranslations(rootDir: string, translationTrees: Tr
                 }
 
                 // get the nodes from the path
-                // add +1 to rootDir length to remove the consequent /
+                // add +1 to rootDir length to remove the trailing /
                 const nodes = tree.__filepath.substr(rootDir.length + 1).split(path.sep)
 
                 const initialPath = nodes.length === 1
-                    ? nodes[0] :
+                    // remove .json postfix
+                    ? nodes[0].split(".")[0] :
                     // take all but last
                     nodes.slice(0, nodes.length - 1)
                     // add last but remove .json extension
