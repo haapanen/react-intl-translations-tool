@@ -38,6 +38,10 @@ class App extends Component {
                 <FormattedMessage
                     id="this.should.break.some.things"
                     defaultMessage=`Example: "foo bar"` />
+
+                <FormattedMessage
+                    id="example.with.brackets"
+                    defaultMessage={"Example with Brackets"} />
             </p>
         );
     }

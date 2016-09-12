@@ -96,6 +96,7 @@ export function findFormattedMessages(input: string): FormattedMessage[] {
 
     let idRegex = /id=("|'|`)(.*?)\1/;
     let defaultMessageRegex = /defaultMessage=("|'|`)(.*?)\1/;
+    let bracketsDefaultMessageRegex = /defaultMessage={("|'|`)(.*?)\1}/;
 
     let begin = input.indexOf(beginOfFmtMsg);
     let end = input.indexOf(endOfFmtMsg, begin);
@@ -104,17 +105,22 @@ export function findFormattedMessages(input: string): FormattedMessage[] {
         const slice = input.slice(begin, end);
         const idMatch = idRegex.exec(slice);
         const defaultMessageMatch = defaultMessageRegex.exec(slice);
+        const bracketsDefaultMessageMatch = bracketsDefaultMessageRegex.exec(slice);
 
         if (idMatch !== null) {
+            const messageMatch = defaultMessageMatch || bracketsDefaultMessageMatch;
+
             formattedMessages.push({
                 id: idMatch[2],
-                defaultMessage: defaultMessageMatch !== null ? defaultMessageMatch[2] : undefined
+                defaultMessage: messageMatch !== null ? messageMatch[2] : undefined
             });
         }
 
         begin = input.indexOf(beginOfFmtMsg, begin + (end - begin));
         end = input.indexOf(endOfFmtMsg, begin);
     }
+
+
 
     return formattedMessages;
 }
