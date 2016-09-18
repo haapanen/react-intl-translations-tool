@@ -1,6 +1,6 @@
 # React Intl translations tool (Prototype at the moment!)
 
-https://travis-ci.org/haapanen/react-intl-translations-tool.svg?branch=master
+![Build status](https://travis-ci.org/haapanen/react-intl-translations-tool.svg?branch=master)
 
 This tool converts a structured tree of translations into a flattened list of translations supported by React Intl.
 
