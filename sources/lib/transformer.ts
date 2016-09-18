@@ -70,15 +70,15 @@ export function toTranslationTree(translations: IFlatTranslations,
             if (i + 1 === len) {
                 subtree[nodes[i]] = subtree[nodes[i]] || {};
                 // set the translation to the default language
-                subtree[nodes[i]][options.defaultLanguage] = translations[translation];
+                (subtree[nodes[i]] as ITranslationTree)[options.defaultLanguage] = translations[translation];
                 // set others as empty
                 options.languages.forEach(language => {
-                    subtree[nodes[i]][language] = "";
+                    (subtree[nodes[i]] as ITranslationTree)[language] = "";
                 });
             } else {
                 // go to next tree level
                 subtree[nodes[i]] = subtree[nodes[i]] || {};
-                subtree = subtree[nodes[i]];
+                subtree = subtree[nodes[i]] as ITranslationTree;
             }
         }
     }
