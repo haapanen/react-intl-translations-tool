@@ -28,8 +28,6 @@ interface Translations {
  */
 export async function compile(dir: string, outputDir: string) {
     try {
-        let i = 0;
-
         // check if target dir exists
         if (!(await dirExists(dir))) {
             return error(`could not find directory: ${dir}.`);
