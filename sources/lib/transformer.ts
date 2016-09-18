@@ -1,4 +1,8 @@
 /**
+ * Transforms translations from tree format to flat format and vice versa
+ */
+
+/**
  * Translations in a tree format e.g.
  *
  * {
